@@ -9,7 +9,7 @@ from myTest  import Tester
 
 FLAGS = tf.app.flags.FLAGS
 
-tf.app.flags.DEFINE_string('run', 'test',
+tf.app.flags.DEFINE_string('run', 'train',
                             "choose to run or train.")
 
 tf.app.flags.DEFINE_string('model', 'default',
@@ -33,16 +33,16 @@ tf.app.flags.DEFINE_integer('sample_iter', 10,
 tf.app.flags.DEFINE_integer('checkpoint_iter', None,
                             "save checkpoints per checkpoint-iter iterations")
 
-tf.app.flags.DEFINE_integer('scale', 2,
+tf.app.flags.DEFINE_integer('scale', 4,
                             "image edge size of high-resolution / that of low-resolution")
 
-tf.app.flags.DEFINE_integer('input_width', 64,
+tf.app.flags.DEFINE_integer('input_width', 32,
                             "input width")
 
-tf.app.flags.DEFINE_integer('input_length', 64,
+tf.app.flags.DEFINE_integer('input_length', 32,
                             "input length")
 
-tf.app.flags.DEFINE_string('data','data/test.npy',
+tf.app.flags.DEFINE_string('data','/home/yyl/pjs/pycharm-remote/MyGAN/data/train.npy',
                            "data path")
 
 tf.app.flags.DEFINE_string('checkpoint_dir', 'checkpoint',

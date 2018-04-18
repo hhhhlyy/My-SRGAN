@@ -59,7 +59,7 @@ class Tester(object):
 
             for batch in BatchGenerator(run_flags.batch_size, self.datasize):
                 batch_big = self.dataset[batch] / 255.0
-                batch_sml = array([imresize(img, size=(64, 64, 3)) \
+                batch_sml = array([imresize(img, size=(run_flags.input_width, run_flags.input_length, 3)) \
                         for img in batch_big])
 
                 superres_imgs = sess.run(out_gen, feed_dict={lr_img: batch_sml})

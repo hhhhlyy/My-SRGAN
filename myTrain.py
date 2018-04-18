@@ -6,6 +6,7 @@ from os.path import exists
 
 from myModel import Model
 from utils import BatchGenerator
+import plot
 class Trainer(object):
     def __init__(self, dictionary):
         self.__dict__.update(dictionary)
@@ -23,7 +24,7 @@ class Trainer(object):
         sw = self.sw
 
         hr_img = tf.placeholder(tf.float32, [None, run_flags.input_width * run_flags.scale,
-                                             run_flags.input_width * run_flags.scale, 3]) #128*128*3 as default
+                                             run_flags.input_length * run_flags.scale, 3]) #128*128*3 as default
         lr_img = tf.placeholder(tf.float32, [None, run_flags.input_width,
                                              run_flags.input_length, 3])#64*64*3 as default
         myModel = Model(locals())
@@ -62,7 +63,7 @@ class Trainer(object):
 
                 for batch in BatchGenerator(run_flags.batch_size, self.datasize):
                     batch_hr = self.dataset[batch] / 255.0
-                    batch_lr = array([imresize(img, size=(64, 64, 3)) \
+                    batch_lr = array([imresize(img, size=(run_flags.input_width, run_flags.input_length, 3)) \
                                       for img in batch_hr])
 
                     _, gc, dc = sess.run([optimizer_gen, cost_gen, cost_dis],
@@ -75,6 +76,13 @@ class Trainer(object):
                     if passed_iters % run_flags.sample_iter == 0:
                         print('Passed iterations=%d, Generative cost=%.9f, Discriminative cost=%.9f' % \
                               (passed_iters, gc, dc))
+                        plot.plot('train_dis_cost_gan', abs(dc))
+                        plot.plot('train_gen_cost_gan', abs(gc))
+
+                    if (passed_iters < 5) or (passed_iters % 100 == 99):
+                        plot.flush()
+
+                    plot.tick()
 
                 if run_flags.checkpoint_iter and epoch % run_flags.checkpoint_iter == 0:
                     saver.save(sess, '/'.join(['models', run_flags.model, run_flags.model]))
